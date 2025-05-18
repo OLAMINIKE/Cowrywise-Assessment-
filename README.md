@@ -227,6 +227,7 @@ This classification helps label each plan appropriately for reporting.
 **3. Determine Last Deposit Date**
 
 * Use the MAX(savings_savingsaccount.transaction_date) to extract the **most recent deposit date** for each plan. 
+* Apply the confirmed amount filter to be greater than zero
 
 **4. Calculate Inactivity**
 
@@ -236,7 +237,7 @@ This classification helps label each plan appropriately for reporting.
 
 * Only include plans where: 
 
-    * No deposit has been made in **over 365 days (**cases where the difference between the max(transaction_date) and the current date is > 365)
+    * No deposit has been made in ***the last 365 days (**cases where the difference between the max(transaction_date) and the current date is within 365)
 
 
 #### Observations

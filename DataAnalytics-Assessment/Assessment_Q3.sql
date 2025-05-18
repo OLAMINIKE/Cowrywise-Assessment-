@@ -9,10 +9,10 @@ WITH plan_with_last_tran AS (
         END AS plan_type,
         MAX(s.transaction_date) AS last_tran_date
     FROM plans_plan p
-    LEFT JOIN savings_savingsaccount s ON p.id = s.plan_id
-    -- include account with active plans (savings or investments) 
+    LEFT JOIN savings_savingsaccount s 
+        ON p.id = s.plan_id AND s.confirmed_amount > 0
     WHERE p.is_regular_savings = 1 OR p.is_a_fund = 1
-    GROUP BY p.id, p.owner_id , plan_type
+    GROUP BY p.id, p.owner_id, plan_type
 )
 
 SELECT
@@ -22,5 +22,6 @@ SELECT
     last_tran_date,
     DATEDIFF(CURDATE(), last_tran_date) AS days_inactive
 FROM plan_with_last_tran
-WHERE last_tran_date IS not NULL and DATEDIFF(CURDATE(), last_tran_date) > 365
+WHERE 
+     DATEDIFF(CURDATE(), last_tran_date) <= 365
 ORDER BY days_inactive DESC;
